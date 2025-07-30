@@ -23,7 +23,11 @@ def get_statement(refcode: str):
 def main():
     ref = send_request()
     xml = get_statement(ref)
-    stmt = xml["FlexStatements"]["FlexStatement"]
+    if "FlexStatements" in xml:
+        stmt = xml["FlexStatements"]["FlexStatement"]
+    else:                       # Einzel-Statement
+        stmt = xml["FlexStatement"]
+
 
     snapshot = {
         "generated": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
