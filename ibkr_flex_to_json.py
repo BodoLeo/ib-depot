@@ -1,11 +1,12 @@
 # pip install ibflex
-import os, json, datetime, pathlib, ibflex
+import os, json, datetime, pathlib
+from ibflex import client as ibc, parser
 
 TOKEN   = os.getenv("FLEX_TOKEN")
 QUERYID = os.getenv("FLEX_QUERY_ID")
 
-xml_data = ibflex.Client(token=TOKEN).get(QUERYID, "xml")
-parsed   = ibflex.parser.parse(xml_data)
+xml_data = ibc.Client(token=TOKEN).get(QUERYID, "xml")
+parsed   = parser.parse(xml_data)
 
 snapshot = {
     "generated": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
