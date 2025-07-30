@@ -1,0 +1,29 @@
+name: IBKR Flex Pull
+
+on:
+  schedule:
+    - cron:  '15 20 * * *'          # täglich 20:15 UTC ≈ 22:15 MESZ
+  workflow_dispatch:                # manueller Start möglich
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - run: pip install --quiet ibflex
+
+      - env:
+          FLEX_TOKEN:   ${{ secrets.FLEX_TOKEN }}
+          FLEX_QUERY_ID: ${{ secrets.FLEX_QUERY_ID }}
+        run: python ibkr_flex_to_json.py
+
+      - run: |
+          git config user.name  "IB-Bot"
+          git config user.email "ibbot@users.noreply.github.com"
+          git add latest.json
+          git commit -m "auto-update $(date -u '+%F %T')" || echo "Nothing changed"
+          git push
