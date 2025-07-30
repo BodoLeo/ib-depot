@@ -24,6 +24,6 @@ jobs:
       - run: |
           git config user.name  "IB-Bot"
           git config user.email "ibbot@users.noreply.github.com"
-          git add latest.json
+          git add raw*.xml
           git commit -m "auto-update $(date -u '+%F %T')" || echo "Nothing changed"
           git push
